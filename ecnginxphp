@@ -1,0 +1,51 @@
+sudo apt-get update
+sudo apt-get install nginx
+sudo ufw allow 'Nginx HTTP'
+sudo ufw status
+
+sudo apt-get install php-fpm
+
+
+sudo nginx -t
+sudo systemctl status php8.3-fpm
+sudo systemctl start php8.3-fpm
+
+sudo systemctl enable php8.3-fpm
+sudo systemctl enable php8.3-fpm
+sudo systemctl enable php8.3-fpm
+sudo systemctl enable php8.3-fpm
+sudo systemctl enable php8.3-fpm
+sudo nano /etc/nginx/sites-available/default
+server {
+    listen 80;
+    server_name your_domain_or_ip;
+    root /var/www/html;
+
+    index index.php index.html index.htm;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/var/run/php/php8.3-fpm.sock;
+    }
+
+    location ~ /\.ht {
+        deny all;
+    }
+}
+
+
+
+
+
+sudo nginx -t
+sudo systemctl reload nginx
+
+
+
+
+sudo chown -R www-data:www-data /var/www/html
+sudo chmod -R 755 /var/www/html
