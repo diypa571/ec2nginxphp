@@ -16,7 +16,12 @@ sudo nginx -t
 sudo systemctl status php8.2-fpm
 sudo systemctl start php8.2-fpm
 sudo systemctl enable php8.2-fpm
+
+
+
 sudo nano /etc/nginx/sites-available/default
+
+Alt 1
 server {
     listen 80;
     server_name your_domain_or_ip;
@@ -37,6 +42,39 @@ server {
         deny all;
     }
 }
+
+
+Alt 2
+
+server {
+    listen 80;
+    server_name your_domain_or_ip;
+    root /var/www/html;
+
+    index index.php index.html index.htm;
+
+    # Redirecting details.php?id=xxx to details/xxx
+    location ~ ^/details\.php\?id=(\d+)$ {
+        return 301 /details/$1;
+    }
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
+    }
+
+    location ~ /\.ht {
+        deny all;
+    }
+}
+
+
+
+
 sudo nginx -t
 sudo systemctl reload nginx
 sudo chown -R www-data:www-data /var/www/html
