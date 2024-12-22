@@ -23,6 +23,8 @@ sudo systemctl enable php8.2-fpm
 sudo nano /etc/nginx/sites-available/default
 
 Alt 1
+ 
+ 
 server {
     listen 80;
     server_name your_domain_or_ip;
@@ -30,33 +32,9 @@ server {
 
     index index.php index.html index.htm;
 
-    location / {
-        try_files $uri $uri/ =404;
-    }
-
-    location ~ \.php$ {
-        include snippets/fastcgi-php.conf;
-        fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
-    }
-
-    location ~ /\.ht {
-        deny all;
-    }
-}
-
-
-Alt 2
-
-server {
-    listen 80;
-    server_name your_domain_or_ip;
-    root /var/www/html;
-
-    index index.php index.html index.htm;
-
-    # Redirecting details.php?id=xxx to details/xxx
-    location ~ ^/details\.php\?id=(\d+)$ {
-        return 301 /details/$1;
+    # Redirecting worker.php?id=xxx to details/xxx
+    location ~ ^/worker\.php\?id=(\d+)$ {
+        return 301 /worker/$1;
     }
 
     location / {
@@ -73,66 +51,9 @@ server {
     }
 }
 
+ 
 
-Alt 3
-
-server {
-    listen 80;
-    server_name your_domain_or_ip;
-    root /var/www/html;
-
-    index index.php index.html index.htm;
-
-    # Redirecting any .php?id=xxx to /path/xxx
-    location ~ ^/(.*)\.php\?id=(\d+)$ {
-        return 301 /$1/$2;
-    }
-
-    location / {
-        try_files $uri $uri/ =404;
-    }
-
-    location ~ \.php$ {
-        include snippets/fastcgi-php.conf;
-        fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
-    }
-
-    location ~ /\.ht {
-        deny all;
-    }
-}
-
-
-
-Alt 4
-sudo nano /etc/nginx/sites-available/default
-server {
-    listen 80;
-    server_name your_domain_or_ip;
-    root /var/www/html;
-
-    index index.php index.html index.htm;
-
-    # Redirecting any .php?id=xxx to /path/xxx except index.php
-    location ~ ^/(?!index\.php$)(.*)\.php\?id=(\d+)$ {
-        return 301 /$1/$2;
-    }
-
-    # Serve index.php and other requests
-    location / {
-        try_files $uri $uri/ /index.php?$query_string;
-    }
-
-    # Handling PHP requests
-    location ~ \.php$ {
-        include snippets/fastcgi-php.conf;
-        fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
-    }
-
-    location ~ /\.ht {
-        deny all;
-    }
-}
+ 
 
 
 
