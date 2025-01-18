@@ -70,6 +70,11 @@ För extra säkerhet kan du inaktivera lösenordsautentisering:
    
 
 ---
+Om ovanstående försök ej fungerar.... det behövs mer configurationer
+sudo nano /etc/ssh/sshd_config.d/50-cloud-init.conf
+  PasswordAuthentication no
+
+
 
 ## Steg 5: Testa inloggning
 Försök logga in med din nyckel:
