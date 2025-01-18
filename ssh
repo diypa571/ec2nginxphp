@@ -1,0 +1,83 @@
+
+# En guide för att använda SSH med privat nyckel.Försöktig med att följa instruktionerna nedan. 
+
+## Steg 1: Skapa en privat/offentlig nyckel
+Om du inte redan har en nyckelpar, använd följande kommando:
+
+ssh-keygen -t rsa -b 4096 -C "demo@example.com"
+
+- Nyckeln sparas i  `~/.ssh/id_rsa` och `~/.ssh/id_rsa.pub`.
+- Tryck Enter för att bekräfta plats eller ange en egen.
+- Ange ett lösenord om du vill lägga till extra säkerhet, rekommenderar verkligen lösenord
+
+---
+
+## Steg 2: Kopiera den publika nyckeln till fjärrmaskinen
+ 
+
+ssh-copy-id -i ~/.ssh/id_rsa.pub diypa@192.168.1.100
+
+
+Om `ssh-copy-id` inte är tillgängligt, använd detta:
+
+cat ~/.ssh/id_rsa.pub | ssh diypa@192.168.1.100 "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
+
+
+Kontrollera att rätt behörigheter är inställda på fjärrmaskinen:
+
+ssh diypa@192.168.1.100
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/authorized_keys
+
+
+---
+
+## Steg 3: Förenkla inloggning med SSH-konfiguration (valfritt)
+Skapa eller redigera SSH-konfigurationsfilen på din lokala maskin:
+
+nano ~/.ssh/config
+
+Lägg till följande:
+plaintext
+Host diypa-maskin
+    HostName 192.168.1.100
+    User diypa
+    IdentityFile ~/.ssh/id_rsa
+
+Nu kan du logga in med:
+
+ssh diypa-maskin
+
+
+---
+
+## Steg 4: Inaktivera lösenordsautentisering (valfritt)
+För extra säkerhet kan du inaktivera lösenordsautentisering:
+1. Redigera SSH-konfigurationsfilen på fjärrmaskinen:
+   
+   sudo nano /etc/ssh/sshd_config
+   
+2. Kontrollera att följande är inställt:
+   plaintext
+   PasswordAuthentication no
+   PubkeyAuthentication yes
+   
+3. Starta om SSH-tjänsten:
+   
+   sudo systemctl restart ssh
+   
+
+---
+
+## Steg 5: Testa inloggning
+Försök logga in med din nyckel:
+
+ssh diypa@192.168.1.100
+
+
+Om du konfigurerade `~/.ssh/config`, använd:
+
+ssh diypa-maskin
+
+
+Nu är din inloggning säker och du använder din privata nyckel för autentisering!
