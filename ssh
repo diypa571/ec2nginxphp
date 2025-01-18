@@ -91,3 +91,18 @@ ssh -i ~/Desktop/id_rsa diypa@localip
 
 Ansluta till datorn
 ssh -i ~/Desktop/id_rsa diypa@localip
+
+
+Rekommendationer::::: 
+ Ndra P till något annat...
+ Stänga av ping
+ sudo ufw allow PortNr
+ sudo ufw allow port 80
+ sudo nano /etc/ufw/before.rules
+-A ufw-before-input -p icmp --icmp-type echo-request -j DROP
+ sudo ufw enable
+ sudo ufw reload
+ sudo ufw status
+
+
+
