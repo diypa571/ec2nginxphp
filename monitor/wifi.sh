@@ -1,5 +1,5 @@
 #!/bin/bash
-
+# Diyar Parwana, Data oc nätverk sakerhet
 # Wi-Fi-nätverk och lösenord
 WIFI_SSIDS=("wifi1" "wifi2" "wifi3")
 WIFI_PASSWORD="DemoPass"
