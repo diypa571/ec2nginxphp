@@ -1,23 +1,25 @@
 #!/bin/bash
 # Diyar Parwana
-# Linux och Data säkerhet
+# Linux och Data Säkerhet 
 
-# Script to monitor internet connectivity and reconnect if needed.
+# Script för att övervaka internetanslutning och återansluta vid behov.
 
 while true; do
-    # Kontrollera UFW status
-    echo "Checking UFW status..."
+    # Rensa tidigare output
+    clear
+
+    # Kontrollera UFW-status
+    echo "Kontrollerar UFW-status..."
     sudo ufw status
 
-    # Kontrollera Internet status
+    # Kontrollera internetstatus
     if ping -c 1 -W 2 8.8.8.8 &> /dev/null; then
-        echo "Internet is working."
+        echo "Internetanslutning är aktiv."
     else
-        echo "No internet connection. Attempting to reconnect..."
+        echo "Ingen internetanslutning. Försöker återansluta..."
         bash wifi.sh
     fi
 
-    # Köra skriptet igen om 5 skunder
+    # Vänta i 5 sekunder innan nästa loop
     sleep 5
 done
-
