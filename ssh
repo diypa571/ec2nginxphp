@@ -2,6 +2,7 @@
 # En guide för att använda SSH med privat nyckel.Försöktig med att följa instruktionerna nedan. 
 # Tänkt för Ubuntu server 
 # installera openssh-server
+apt update
 sudo apt install openssh-server
 ## Steg 1: Skapa en privat/offentlig nyckel
 Om du inte redan har en nyckelpar, använd följande kommando:
