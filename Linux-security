@@ -1,0 +1,17 @@
+# Useful Linux Commands to check if your computer is been hacked..
+
+List of Users
+w
+
+Checking network connections, Listening
+netstat -natu | grep 'LISTEN'
+
+Checking network connections, Established connection
+netstat -natu | grep 'ESTABLISHED'
+
+
+Checking activity
+btop
+
+The chkrootkit, good security tool, can find rootkits and backdoors
+chkrootkit
