@@ -41,7 +41,7 @@ Skapa eller redigera SSH-konfigurationsfilen på din lokala maskin:
 nano ~/.ssh/config
 
 Lägg till följande:
-plaintext
+ 
 Host demo-maskin
     HostName 192.168.1.100
     User demo
