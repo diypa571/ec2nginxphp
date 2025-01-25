@@ -90,10 +90,10 @@ Om du konfigurerade `~/.ssh/config`, använd:
 ssh demo-maskin
 
 cp kopiera privata nycklen till Skrivbordet.. ej behövs
-ssh -i ~/Desktop/id_rsa diypa@localip
+ssh -i ~/Desktop/id_rsa demo@localip
 
 Ansluta till datorn
-ssh -i ~/Desktop/id_rsa diypa@localip
+ssh -i ~/Desktop/id_rsa demo@localip
 
 
 Rekommendationer::::: 
