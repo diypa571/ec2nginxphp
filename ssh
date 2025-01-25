@@ -18,17 +18,17 @@ ssh-keygen -t rsa -b 4096 -C "demo@example.com"
 ## Steg 2: Kopiera den publika nyckeln till fjärrmaskinen
  
 
-ssh-copy-id -i ~/.ssh/id_rsa.pub diypa@192.168.1.100
+ssh-copy-id -i ~/.ssh/id_rsa.pub demo@192.168.1.100
 
 
 Om `ssh-copy-id` inte är tillgängligt, använd detta:
 
-cat ~/.ssh/id_rsa.pub | ssh diypa@192.168.1.100 "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
+cat ~/.ssh/id_rsa.pub | ssh demo@192.168.1.100 "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
 
 
 Kontrollera att rätt behörigheter är inställda på fjärrmaskinen:
 Försökt inte med nedanstående demo ... existerar inte..
-ssh diypa@192.168.1.100
+ssh demo@192.168.1.100
 chmod 700 ~/.ssh
 chmod 600 ~/.ssh/authorized_keys
 
@@ -42,14 +42,14 @@ nano ~/.ssh/config
 
 Lägg till följande:
 plaintext
-Host diypa-maskin
+Host demo-maskin
     HostName 192.168.1.100
-    User diypa
+    User demo
     IdentityFile ~/.ssh/id_rsa
 
 Nu kan du logga in med:
 
-ssh diypa-maskin
+ssh demo-maskin
 
 
 ---
@@ -61,10 +61,12 @@ För extra säkerhet kan du inaktivera lösenordsautentisering:
    sudo nano /etc/ssh/sshd_config
    
 2. Kontrollera att följande är inställt:
-   plaintext
+   Mycket relevant med att ha rätt konfigurationer. 
    PasswordAuthentication no
    PubkeyAuthentication yes
-   
+   PermitRootLogin no
+   AddressFamily inet
+
 3. Starta om SSH-tjänsten:
    
    sudo systemctl restart ssh
@@ -80,12 +82,12 @@ sudo nano /etc/ssh/sshd_config.d/50-cloud-init.conf
 ## Steg 5: Testa inloggning
 Försök logga in med din nyckel:
 
-ssh diypa@192.168.1.100
+ssh demo@192.168.1.100
 
 
 Om du konfigurerade `~/.ssh/config`, använd:
 
-ssh diypa-maskin
+ssh demo-maskin
 
 cp kopiera privata nycklen till Skrivbordet.. ej behövs
 ssh -i ~/Desktop/id_rsa diypa@localip
