@@ -23,6 +23,8 @@ sudo ufw allow 'Nginx HTTP'
 sudo ufw status
 
 sudo nano /etc/nginx/sites-available/default
+
+
 server {
     listen 80;
     server_name your_domain_or_ip;
@@ -31,7 +33,12 @@ server {
     index index.php index.html index.htm;
 
     location / {
-        try_files $uri $uri/ =404;
+        try_files $uri $uri/ /404.html;
+    }
+
+    error_page 404 /404.html;
+    location = /404.html {
+        internal;
     }
 
     location ~ \.php$ {
