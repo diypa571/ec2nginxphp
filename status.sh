@@ -69,21 +69,28 @@ for service in nginx php8.3-fpm; do
     fi
 done
 
-# Create a PHP test file
-echo "Checking PHP execution via Nginx..."
-TEST_FILE="/var/www/html/test.php"
-echo "<?php echo 'PHP is working!'; ?>" | sudo tee "$TEST_FILE" > /dev/null
+ # Check permissions of /var/www/html folder
+EXPECTED_FOLDER_PERMS="755"
+ACTUAL_FOLDER_PERMS=$(stat -c "%a" "/var/www/html")
 
-# Check file permissions
-EXPECTED_PERMS="755"
-ACTUAL_PERMS=$(stat -c "%a" "$TEST_FILE")
-
-if [ "$ACTUAL_PERMS" == "$EXPECTED_PERMS" ]; then
-    echo "✅ $TEST_FILE has correct permissions ($EXPECTED_PERMS)."
+if [ "$ACTUAL_FOLDER_PERMS" == "$EXPECTED_FOLDER_PERMS" ]; then
+    echo "✅ /var/www/html has correct permissions ($EXPECTED_FOLDER_PERMS)."
 else
-    echo "❌ $TEST_FILE has incorrect permissions ($ACTUAL_PERMS)!"
+    echo "❌ /var/www/html has incorrect permissions ($ACTUAL_FOLDER_PERMS)!"
     exit 1
 fi
+
+# Check permissions of /var/www/html/test.php file
+EXPECTED_FILE_PERMS="755"
+ACTUAL_FILE_PERMS=$(stat -c "%a" "/var/www/html/test.php")
+
+if [ "$ACTUAL_FILE_PERMS" == "$EXPECTED_FILE_PERMS" ]; then
+    echo "✅ /var/www/html/test.php has correct permissions ($EXPECTED_FILE_PERMS)."
+else
+    echo "❌ /var/www/html/test.php has incorrect permissions ($ACTUAL_FILE_PERMS)!"
+    exit 1
+fi
+
 
 # Test PHP via Nginx using curl
 if curl -sSf http://localhost/test.php | grep -q "PHP is working!"; then
