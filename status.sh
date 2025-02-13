@@ -1,11 +1,9 @@
-
-
 #!/bin/bash
 # Diyar Parwana, 2022-02-19
 # Exit on error
 set -e
 
-echo "Checking if Nginx and PHP-FPM are installed..."
+echo "Checking if Nginx, PHP-FPM, and UFW are installed and configured..."
 
 # Check if Nginx is installed
 if ! command -v nginx &> /dev/null; then
@@ -69,7 +67,38 @@ for service in nginx php8.3-fpm; do
     fi
 done
 
- # Check permissions of /var/www/html folder
+# Check if UFW is installed
+if ! command -v ufw &> /dev/null; then
+    echo "❌ UFW is NOT installed!"
+    exit 1
+else
+    echo "✅ UFW is installed."
+fi
+
+# Check if UFW is active
+if sudo ufw status | grep -q "active"; then
+    echo "✅ UFW is active."
+else
+    echo "❌ UFW is NOT active!"
+    exit 1
+fi
+
+# Check if UFW allows HTTP and HTTPS traffic
+if sudo ufw status | grep -q "80/tcp.*ALLOW"; then
+    echo "✅ UFW allows HTTP (port 80)."
+else
+    echo "❌ UFW does NOT allow HTTP (port 80)!"
+    exit 1
+fi
+
+if sudo ufw status | grep -q "443/tcp.*ALLOW"; then
+    echo "✅ UFW allows HTTPS (port 443)."
+else
+    echo "❌ UFW does NOT allow HTTPS (port 443)!"
+    exit 1
+fi
+
+# Check permissions of /var/www/html folder
 EXPECTED_FOLDER_PERMS="755"
 ACTUAL_FOLDER_PERMS=$(stat -c "%a" "/var/www/html")
 
@@ -90,7 +119,6 @@ else
     echo "❌ /var/www/html/test.php has incorrect permissions ($ACTUAL_FILE_PERMS)!"
     exit 1
 fi
-
 
 # Test PHP via Nginx using curl
 if curl -sSf http://localhost/test.php | grep -q "PHP is working!"; then
