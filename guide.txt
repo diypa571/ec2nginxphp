@@ -1,0 +1,88 @@
+Diyar Parwana
+Nginx and PHP 8.3 on EC2 AWS & DigitalOcean (digitalocean.se)
+
+ This guide will help you set up a linux webserver for production, install Nginx, PHP, and configure your server on AWS EC2 and DigitalOcean. I allways will avoid using the root user and instead create a new user with less privileges.
+Create a New User
+First, log in to your server using SSH
+ssh root@ip
+Create a new user called ubuntu
+adduser ubuntu
+Add the user to the sudo group
+usermod -aG sudo ubuntu
+Copy SSH keys to the new user
+rsync - archive - chown=ubuntu:ubuntu ~/.ssh /home/ubuntu
+Log out and log back in as the ubuntu user
+exit
+ssh ubuntu@your_server_ip
+
+Install Nginx and PHP
+Update your machine
+sudo apt-get update
+Install Nginx
+sudo apt-get install nginx -y
+Install PHP-FPM and MySQL extension
+sudo apt-get install php-fpm php-mysql -y
+Verify Nginx configuration
+sudo nginx -t
+Check PHP-FPM service
+sudo systemctl status php8.3-fpm
+Start PHP-FPM (if not running)
+sudo systemctl status php8.3-fpm
+Install PHP Extensions
+Add the Ondrej Sury PPA (for latest PHP versions)
+Good for curl 
+sudo add-apt-repository ppa:ondrej/php -y
+sudo apt-get update
+Install PHP-CURL
+sudo apt install php-curl -y
+Update the package list again
+sudo apt-get update
+Restart PHP-FPM and Nginx
+sudo systemctl restart php8.3-fpm
+sudo systemctl restart nginx
+Configure Firewall
+Allow HTTP traffic through UFW (Uncomplicated Firewall)
+sudo ufw allow 'Nginx HTTP'
+Allow ssh traffic
+sudo ufw allow 22
+Check firewall status and enable it
+sudo ufw status
+sudo ufw enable
+Adapt Nginx for PHP
+Open default Nginx configuration file
+sudo nano /etc/nginx/sites-available/default
+Change the existing nginx code with this new code 
+server {
+ listen 80;
+ server_name your_domain_or_ip;
+ root /var/www/html;
+index index.php index.html index.htm;
+location / {
+ try_files $uri $uri/ /404.html;
+ }
+error_page 404 /404.html;
+ location = /404.html {
+ internal;
+ }
+location ~ \.php$ {
+ include snippets/fastcgi-php.conf;
+ fastcgi_pass unix:/var/run/php/php8.3-fpm.sock;
+ }
+location ~ /\.ht {
+ deny all;
+ }
+}
+Save and exit
+Test the configuration, yes do test allways before reloading nginx
+sudo nginx -t
+Reload Nginx
+sudo systemctl reload nginx
+Have correct File and folder Permissions
+Set the correct ownership and permissions for the web directory
+sudo chown -R www-data:www-data /var/www/html
+sudo chmod -R 755 /var/www/html
+sudo chown -R ubuntu:ubuntu /var/www/html
+ 
+Nginx + PHP 8.3 setup is now complete! 
+So now you can access your localhost, http://localhost
+Your files should normaly be in the var/www/html/ a
