@@ -1,3 +1,10 @@
+Dont need...
+try to create a new user
+adduser ubuntu
+usermod -aG sudo ubuntu
+rsync --archive --chown=ubuntu:ubuntu ~/.ssh /home/ubuntu
+
+
 sudo apt-get update
 sudo apt-get install nginx
  
