@@ -1,5 +1,5 @@
-Dont need...
-try to create a new user
+Dont use root, create a new user with new prevs...
+
 adduser ubuntu
 usermod -aG sudo ubuntu
 rsync --archive --chown=ubuntu:ubuntu ~/.ssh /home/ubuntu
