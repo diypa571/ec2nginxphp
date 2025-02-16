@@ -15,7 +15,7 @@ sudo apt-get install php-fpm php-mysql
 sudo nginx -t
 sudo systemctl status php8.3-fpm
 sudo systemctl start php8.3-fpm
-
+sudo apt-get update
 sudo add-apt-repository ppa:ondrej/php -y
 sudo add-apt-repository ppa:ondrej/php
 sudo apt-get update
@@ -25,9 +25,12 @@ sudo apt-get update
 
 sudo systemctl restart php8.3-fpm
 sudo systemctl restart nginx
-
+sudo apt-get update
 sudo ufw allow 'Nginx HTTP'
+sudo ufw allow 22
+sudo ufw enable
 sudo ufw status
+sudo apt-get update
 
 sudo nano /etc/nginx/sites-available/default
 
@@ -57,17 +60,11 @@ server {
         deny all;
     }
 }
-
-
-
-
+ 
 
 sudo nginx -t
 sudo systemctl reload nginx
-
-
-
-
+ 
 sudo chown -R www-data:www-data /var/www/html
 sudo chmod -R 755 /var/www/html
 sudo chown -R ubuntu:ubuntu /var/www/html
